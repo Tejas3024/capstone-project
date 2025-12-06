@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Capstone Frontend</title>
+</head>
+<body>
+
+    <h1>Submit your Data</h1>
+
+    <form id="dataForm">
+        <label>Name:</label>
+        <input type="text" id="name"><br><br>
+
+        <label>Email:</label>
+        <input type="text" id="email"><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/submit', {
+
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, email: email })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Backend error");
+                }
+
+                const result = await response.json();
+                document.getElementById('response').innerText = result.message;
+
+            } catch (error) {
+                document.getElementById('response').innerText = "Failed to connect to backend!";
+            }
+        });
+    </script>
+
+</body>
+</html>
