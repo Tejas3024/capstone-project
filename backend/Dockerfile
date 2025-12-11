@@ -1,20 +1,12 @@
-# Use official Python image
-FROM python:3.10-slim
-
-# Set working directory
+FROM python:3.9-slim
 WORKDIR /app
-
-# Copy requirements
 COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the entire application
+RUN pip install -r requirements.txt
 COPY . .
 
-# Expose port 5000
+# Add EXPOSE 5000 to document the listening port
 EXPOSE 5000
 
-# Run the application
-CMD ["python", "app.py"]
+# Use Gunicorn to run the app reliably in production
+# Assumes your app is defined as 'app' in 'app.py'
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
